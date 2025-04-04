@@ -44,16 +44,16 @@ const registerUser=async(req,res)=>{
 
         res.cookie('refreshToken',refreshToken,{
             httpOnly:true,
-            secure:false,
-            sameSite:'Lax',
+            secure:true,
+            sameSite:'None',
             maxAge:7*24*60*60*1000
 
         })
 
         res.cookie('xUserId',newUser._id,{
             httpOnly: true, 
-            secure: false, 
-            sameSite: "Lax", 
+            secure: true, 
+            sameSite: "None", 
             maxAge: 7 * 24 * 60 * 60 * 1000,
         })
         return res.status(200).json({
@@ -224,14 +224,14 @@ const handleGoogleLogin=async(req,res)=>{
             // console.log("accessToken",accessToken," ",refreshToken)
             res.cookie('refreshToken',refreshToken,{
                 httpOnly:true,
-                secure:false,
-                sameSite:'Lax',
+                secure:true,
+                sameSite:'None',
                 maxAge:7*24*60*60*1000
             })
             res.cookie('xUserId',userExist._id,{
                 httpOnly:true,
-                secure:false,
-                sameSite:'Lax',
+                secure:true,
+                sameSite:'None',
                 maxAge:7*24*60*60*1000
             })
             return res.status(200).json({
@@ -258,14 +258,14 @@ const handleGoogleLogin=async(req,res)=>{
         res.setHeader('x-user-id',`${newUser._id}`);
         res.cookie('refreshToken',refreshToken,{
             httpOnly:true,
-            secure:false,
-            sameSite:'Lax',
+            secure:true,
+            sameSite:'None',
             maxAge:7*24*60*60*1000
         })
         res.cookie('xUserId',newUser._id,{
             httpOnly:true,
-            secure:false,
-            sameSite:'Lax',
+            secure:true,
+            sameSite:'None',
             maxAge:7*24*60*60*1000
         })
 
@@ -315,14 +315,14 @@ const logInUser = async (req, res) => {
         
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true, // Prevents XSS attacks
-            secure: false, // Set true for production
-            sameSite: "Lax", // Allows sending cookies across domains
+            secure: true, // Set true for production
+            sameSite: "None", // Allows sending cookies across domains
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
         res.cookie('xUserId',findUser._id,{
             httpOnly: true, // Prevents XSS attacks
-            secure: false, // Set true for production
-            sameSite: "Lax", // Allows sending cookies across domains
+            secure: true, // Set true for production
+            sameSite: "None", // Allows sending cookies across domains
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     })
 
@@ -429,7 +429,7 @@ const handleRefreshToken = async (req, res) => {
             res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "Lax",
+                sameSite: "None",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             return res.status(200).json({
