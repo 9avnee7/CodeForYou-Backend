@@ -7,9 +7,9 @@ const helmet=require('helmet');
 // const {RateLimiterRedis}=require('rate-limiter-flexible');
 const {rateLimit}=require('express-rate-limit');
 // const errorHandler=require('./middleware/errorHandler');
-// const routes=require('./routes/identify-routes')
-const redis=require('ioredis');
-const {RedisStore} = require('rate-limit-redis');
+// // const routes=require('./routes/identify-routes')
+// const redis=require('ioredis');
+// const {RedisStore} = require('rate-limit-redis');
 const proxy=require('express-http-proxy');
 const fetch = require('node-fetch');
 const stringRoutes=require('./routes/routes')
@@ -29,7 +29,7 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-const redisClient=new redis(process.env.REDIS_URL);
+// const redisClient=new redis(process.env.REDIS_URL);
 
 
 
@@ -42,10 +42,10 @@ const rateLimitOptions=rateLimit({
     handler:(req,res)=>{
         logger.warn(`Sensitive endpoint rate limit exceeded for IP: ${req.ip}`);
     res.status(429).json({ success: false, message: "Too many requests" });
-  },
-  store:new RedisStore({
-    sendCommand:(...args)=>redisClient.call(...args)
-  })
+  }
+  // store:new RedisStore({
+  //   sendCommand:(...args)=>redisClient.call(...args)
+  // })
 })
 
 
