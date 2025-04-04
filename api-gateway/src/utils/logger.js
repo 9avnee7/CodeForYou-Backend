@@ -10,7 +10,7 @@ const logger=winston.createLogger({
         winston.format.json()
     ),
 
-    defaultMeta:{service:"post-service"},
+    defaultMeta:{service:"api-gateway"},
     transports:[
         new winston.transports.Console({
             format:winston.format.combine(

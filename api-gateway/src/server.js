@@ -7,11 +7,15 @@ const helmet=require('helmet');
 // const {RateLimiterRedis}=require('rate-limiter-flexible');
 const {rateLimit}=require('express-rate-limit');
 // const errorHandler=require('./middleware/errorHandler');
+<<<<<<< HEAD
 // // const routes=require('./routes/identify-routes')
+=======
+// const routes=require('./routes/identify-routes')
+>>>>>>> c7f32dc (modification for redis)
 // const redis=require('ioredis');
 // const {RedisStore} = require('rate-limit-redis');
 const proxy=require('express-http-proxy');
-const fetch = require('node-fetch');
+const fetch= require('node-fetch');
 const stringRoutes=require('./routes/routes')
 const mongoose=require('mongoose');
 const puppeteer=require('puppeteer')
@@ -43,9 +47,15 @@ const rateLimitOptions=rateLimit({
         logger.warn(`Sensitive endpoint rate limit exceeded for IP: ${req.ip}`);
     res.status(429).json({ success: false, message: "Too many requests" });
   }
+<<<<<<< HEAD
   // store:new RedisStore({
   //   sendCommand:(...args)=>redisClient.call(...args)
   // })
+=======
+//   store:new RedisStore({
+//     sendCommand:(...args)=>redisClient.call(...args)
+//   })
+>>>>>>> c7f32dc (modification for redis)
 })
 
 
@@ -117,7 +127,7 @@ app.get('/api/ninja-user/:username', async (req, res) => {
     console.log(username)
     const url = `${process.env.CODING_NINJAS_DATA_URL}${username}`;
     const contributionUrl=`${process.env.CODING_NINJAS_CONTRIBUTION_URL}${username}&end_date=${new Date()}&start_date=2023-02-23T18:30:00%2B00:00&is_stats_required=true&unified=true&request_differentiator=1739869546365&app_context=publicsection&naukri_request=true`;
-
+    console.log(contributionUrl)
     console.log(url);
     try {
         const response = await fetch(url, {
@@ -144,6 +154,7 @@ app.get('/api/ninja-user/:username', async (req, res) => {
 
         );
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: "Internal server error" });
     }
 });
