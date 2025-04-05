@@ -30,7 +30,8 @@ const handlePayment = async (req, res) => {
         return res.status(200).json({
             success: true,
             orderId: order.id,
-        });
+            orderDetails: order 
+          });
     } catch (e) {
         logger.error(`Error occurred at handlePayment try block: ${e.message}`, e);
         res.status(500).json({

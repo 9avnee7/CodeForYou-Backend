@@ -7,11 +7,7 @@ const helmet=require('helmet');
 // const {RateLimiterRedis}=require('rate-limiter-flexible');
 const {rateLimit}=require('express-rate-limit');
 // const errorHandler=require('./middleware/errorHandler');
-<<<<<<< HEAD
-// // const routes=require('./routes/identify-routes')
-=======
-// const routes=require('./routes/identify-routes')
->>>>>>> c7f32dc (modification for redis)
+
 // const redis=require('ioredis');
 
 // const {RedisStore} = require('rate-limit-redis');
@@ -48,15 +44,6 @@ const rateLimitOptions=rateLimit({
         logger.warn(`Sensitive endpoint rate limit exceeded for IP: ${req.ip}`);
     res.status(429).json({ success: false, message: "Too many requests" });
   }
-<<<<<<< HEAD
-  // store:new RedisStore({
-  //   sendCommand:(...args)=>redisClient.call(...args)
-  // })
-=======
-//   store:new RedisStore({
-//     sendCommand:(...args)=>redisClient.call(...args)
-//   })
->>>>>>> c7f32dc (modification for redis)
 })
 
 
