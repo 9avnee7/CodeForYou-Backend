@@ -217,18 +217,22 @@ app.get('/api/gfg-user/submission/:year/:handle/:requestType', async (req, res) 
 
 
 
-
 app.get('/fetch-random-string', async (req, res) => {
     try {
+        console.log("Launching browser...");
         const browser = await puppeteer.launch({
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            protocolTimeout: 60000 // 👈 Important fix: prevent protocol timeout error
         });
 
+        console.log("Opening new page...");
         const page = await browser.newPage();
+        page.setDefaultNavigationTimeout(60000); // 👈 Optional: extend navigation timeout
 
         let randomString = null;
 
+        console.log("Setting request listener...");
         page.on('request', (request) => {
             const url = request.url();
             if (url.includes('gfg-assets/_next/data')) {
@@ -240,27 +244,30 @@ app.get('/fetch-random-string', async (req, res) => {
             }
         });
 
-        // Navigate with increased timeout
+        console.log("Navigating to profile page...");
         await page.goto(process.env.GFG_DEVELOPER_PROFILE_FOR_STRING, {
             waitUntil: 'networkidle0',
-            timeout: 60000
+            timeout: 60000 // 👈 ensure the page gets enough time to load
         });
 
+        console.log("Waiting for 4 seconds...");
         await page.waitForTimeout(4000);
 
+        console.log("Closing browser...");
         await browser.close();
 
         if (!randomString) {
+            console.error("Could not extract random string");
             return res.status(500).json({ error: 'Could not extract random string. Structure might have changed.' });
         }
 
+        console.log("Returning random string...");
         res.json({ randomString });
     } catch (error) {
-        console.error("Puppeteer error:", error);
-        res.status(500).json({ error: error.message });
+        console.error("Puppeteer error:", error.message || error);
+        res.status(500).json({ error: error.message || 'Internal server error' });
     }
 });
-
 
 
 app.listen(PORT, () => {
