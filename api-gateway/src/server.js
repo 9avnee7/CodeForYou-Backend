@@ -113,7 +113,7 @@ app.get('/api/gfg-user/:username/:randomString', async (req, res) => {
 app.get('/api/ninja-user/:username', async (req, res) => {
     const username=req.params.username;
     console.log(username)
-    const url = `${process.env.CODING_NINJAS_DATA_URL}${username}`;
+    const url = `${process.env.CODING_NINJAS_DATA_URL}${username}&request_differentiator=1739884394206&app_context=publicsection&naukri_request=true`;
     const contributionUrl = `${process.env.CODING_NINJAS_CONTRIBUTION_URL}${username}&end_date=${new Date().toISOString()}&start_date=2023-02-23T18:30:00%2B00:00&is_stats_required=true&unified=true&request_differentiator=${Date.now()}&app_context=publicsection&naukri_request=true`;    console.log(contributionUrl)
     console.log(url);
     try {
