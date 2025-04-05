@@ -135,6 +135,7 @@ app.get('/api/ninja-user/:username', async (req, res) => {
         }
         const contributionData=await contributionResponse.json();
         const data = await response.json();
+        console.log(data,contributionData)
         res.json({
             data,contributionData
         }
