@@ -197,7 +197,7 @@ app.get('/fetch-random-string', async (req, res) => {
             }
         });
 
-        await page.goto(`${GFG_DEVELOPER_PROFILE_FOR_STRING}`, { waitUntil: 'networkidle2' });
+        await page.goto(`${process.env.GFG_DEVELOPER_PROFILE_FOR_STRING}`, { waitUntil: 'networkidle2' });
 
         await new Promise((resolve) => setTimeout(resolve, 5000));
 
