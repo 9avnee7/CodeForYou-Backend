@@ -111,42 +111,63 @@ app.get('/api/gfg-user/:username/:randomString', async (req, res) => {
 
 
 app.get('/api/ninja-user/:username', async (req, res) => {
-    const username=req.params.username;
-    console.log(username)
-    const url = `${process.env.CODING_NINJAS_DATA_URL}${username}&request_differentiator=1739884394206&app_context=publicsection&naukri_request=true`;
-    const contributionUrl = `${process.env.CODING_NINJAS_CONTRIBUTION_URL}${username}&end_date=${new Date().toISOString()}&start_date=2023-02-23T18:30:00%2B00:00&is_stats_required=true&unified=true&request_differentiator=${Date.now()}&app_context=publicsection&naukri_request=true`;    console.log(contributionUrl)
-    console.log(url);
+    const username = req.params.username;
+    console.log("Username received:", username);
+
+    const baseDataUrl = process.env.CODING_NINJAS_DATA_URL;
+    const baseContributionUrl = process.env.CODING_NINJAS_CONTRIBUTION_URL;
+
+    const url = `${baseDataUrl}${username}&request_differentiator=1739884394206&app_context=publicsection&naukri_request=true`;
+
+    const contributionUrl = `${baseContributionUrl}${username}&end_date=${new Date().toISOString()}&start_date=2023-02-23T18:30:00%2B00:00&is_stats_required=true&unified=true&request_differentiator=${Date.now()}&app_context=publicsection&naukri_request=true`;
+
+    console.log("Data URL:", url);
+    console.log("Contribution URL:", contributionUrl);
+
     try {
+        console.log("Fetching main data...");
         const response = await fetch(url, {
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                "User-Agent": "Mozilla/5.0",
                 "Accept": "application/json"
             }
         });
+
+        console.log("Fetching contribution data...");
         const contributionResponse = await fetch(contributionUrl, {
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                "User-Agent": "Mozilla/5.0",
                 "Accept": "application/json"
             }
         });
 
         if (!response.ok) {
-            return res.status(response.status).json({ error: "Failed to fetch data" });
-        }
-        console.log(response,contributionResponse)
-        const contributionData=await contributionResponse.json();
-        const data = await response.json();
-        console.log(data,contributionData)
-        res.json({
-            data,contributionData
+            console.error("Main data fetch failed");
+            return res.status(response.status).json({ error: "Failed to fetch user data" });
         }
 
-        );
+        if (!contributionResponse.ok) {
+            console.error("Contribution data fetch failed");
+            return res.status(contributionResponse.status).json({ error: "Failed to fetch contribution data" });
+        }
+
+        console.log("Parsing responses...");
+        const data = await response.json();
+        const contributionData = await contributionResponse.json();
+
+        console.log("Successfully fetched and parsed data.");
+
+        res.json({
+            data,
+            contributionData
+        });
+
     } catch (error) {
-        console.log(error)
+        console.error("Error during fetch:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
 
 app.get('/api/gfg-user/submission/:year/:handle/:requestType', async (req, res) => {
     const { handle, year, requestType } = req.params;
