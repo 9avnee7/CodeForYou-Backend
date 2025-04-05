@@ -133,6 +133,7 @@ app.get('/api/ninja-user/:username', async (req, res) => {
         if (!response.ok) {
             return res.status(response.status).json({ error: "Failed to fetch data" });
         }
+        console.log(response,contributionResponse)
         const contributionData=await contributionResponse.json();
         const data = await response.json();
         console.log(data,contributionData)
