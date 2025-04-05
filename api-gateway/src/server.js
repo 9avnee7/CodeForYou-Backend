@@ -24,11 +24,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
-const fetchWithTimeout = (url, options = {}, timeout = 10000) => {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
-    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
-};
 
 
 mongoose.connect(process.env.MongoDB_URL).then(result=>logger.info("mongo db connected")).catch(e=>console.log("error occured"));
