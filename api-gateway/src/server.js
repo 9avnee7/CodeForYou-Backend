@@ -181,33 +181,50 @@ app.get('/api/gfg-user/submission/:year/:handle/:requestType', async (req, res) 
 
 
 
+
 app.get('/fetch-random-string', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+
         const page = await browser.newPage();
 
-        let randomString = "";
+        let randomString = null;
 
-        page.on('request', (request) => {           
+        page.on('request', (request) => {
             const url = request.url();
-            if (url.includes("gfg-assets/_next/data")) {
-                const sp = url.split('/');
-                randomString = sp[6];
-                console.log(randomString);
+            if (url.includes('gfg-assets/_next/data')) {
+                const match = url.match(/\/gfg-assets\/_next\/data\/([^/]+)\//);
+                if (match) {
+                    randomString = match[1];
+                    console.log("Extracted random string:", randomString);
+                }
             }
         });
 
-        await page.goto(`${process.env.GFG_DEVELOPER_PROFILE_FOR_STRING}`, { waitUntil: 'networkidle2' });
+        // Navigate with increased timeout
+        await page.goto(process.env.GFG_DEVELOPER_PROFILE_FOR_STRING, {
+            waitUntil: 'networkidle0',
+            timeout: 60000
+        });
 
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await page.waitForTimeout(4000);
 
         await browser.close();
-        
+
+        if (!randomString) {
+            return res.status(500).json({ error: 'Could not extract random string. Structure might have changed.' });
+        }
+
         res.json({ randomString });
     } catch (error) {
+        console.error("Puppeteer error:", error);
         res.status(500).json({ error: error.message });
     }
 });
+
 
 
 app.listen(PORT, () => {
