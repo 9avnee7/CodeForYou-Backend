@@ -113,7 +113,7 @@ app.get('/api/gfg-user/:username/:randomString', async (req, res) => {
     }
 });
 
-const axios = require('axios');
+
 
 app.get('/api/ninja-user/:username', async (req, res) => {
     const username = req.params.username;
