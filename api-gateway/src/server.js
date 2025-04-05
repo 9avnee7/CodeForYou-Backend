@@ -126,8 +126,8 @@ app.get('/api/ninja-user/:username', async (req, res) => {
     console.log("Contribution URL:", contributionUrl);
 
     try {
-        console.log("Fetching main data...");
-        const response = await fetch(url);
+       
+        
 
         console.log("Fetching contribution data...");
         const contributionResponse = await fetch(contributionUrl, {
@@ -136,6 +136,8 @@ app.get('/api/ninja-user/:username', async (req, res) => {
                 "Accept": "application/json"
             }
         });
+        console.log("Fetching main data...");
+        const response = await fetch(url);
 
         if (!response.ok) {
             console.error("Main data fetch failed");
