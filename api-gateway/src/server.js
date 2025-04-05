@@ -127,12 +127,7 @@ app.get('/api/ninja-user/:username', async (req, res) => {
 
     try {
         console.log("Fetching main data...");
-        const response = await fetch(url, {
-            headers: {
-                "User-Agent": "Mozilla/5.0",
-                "Accept": "application/json"
-            }
-        });
+        const response = await fetch(url);
 
         console.log("Fetching contribution data...");
         const contributionResponse = await fetch(contributionUrl, {
