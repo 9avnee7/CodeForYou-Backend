@@ -12,7 +12,7 @@ const {rateLimit}=require('express-rate-limit');
 
 // const {RedisStore} = require('rate-limit-redis');
 const proxy=require('express-http-proxy');
-const fetch= require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const stringRoutes=require('./routes/routes')
 const mongoose=require('mongoose');
 const puppeteer=require('puppeteer')
@@ -175,6 +175,7 @@ app.get('/api/gfg-user/submission/:year/:handle/:requestType', async (req, res) 
         const data = await response.json();
         res.status(200).json(data);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: "Failed to fetch data from GFG API", details: error.message });
     }
 });
