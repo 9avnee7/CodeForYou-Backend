@@ -12,7 +12,8 @@ const {rateLimit}=require('express-rate-limit');
 
 // const {RedisStore} = require('rate-limit-redis');
 const proxy=require('express-http-proxy');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = require('node-fetch');
 const stringRoutes=require('./routes/routes')
 const mongoose=require('mongoose');
 const puppeteer=require('puppeteer')
