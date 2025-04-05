@@ -250,8 +250,7 @@ app.get('/fetch-random-string', async (req, res) => {
             timeout: 60000 // 👈 ensure the page gets enough time to load
         });
 
-        console.log("Waiting for 4 seconds...");
-        await page.waitForTimeout(4000);
+
 
         console.log("Closing browser...");
         await browser.close();
