@@ -18,9 +18,17 @@ const stringRoutes=require('./routes/routes')
 const mongoose=require('mongoose');
 const puppeteer=require('puppeteer')
 // const {validateToken} = require('./middleware/authMiddleware');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+const fetchWithTimeout = (url, options = {}, timeout = 10000) => {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+};
 
 
 mongoose.connect(process.env.MongoDB_URL).then(result=>logger.info("mongo db connected")).catch(e=>console.log("error occured"));
@@ -110,6 +118,7 @@ app.get('/api/gfg-user/:username/:randomString', async (req, res) => {
     }
 });
 
+const axios = require('axios');
 
 app.get('/api/ninja-user/:username', async (req, res) => {
     const username = req.params.username;
@@ -126,42 +135,38 @@ app.get('/api/ninja-user/:username', async (req, res) => {
     console.log("Contribution URL:", contributionUrl);
 
     try {
-       
-        
-
         console.log("Fetching contribution data...");
-        const contributionResponse = await fetch(contributionUrl, {
+        const contributionResponse = await axios.get(contributionUrl, {
             headers: {
-                "User-Agent": "Mozilla/5.0",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
                 "Accept": "application/json"
-            }
+            },
+            timeout: 10000 // 10 seconds timeout
         });
+
         console.log("Fetching main data...");
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            console.error("Main data fetch failed");
-            return res.status(response.status).json({ error: "Failed to fetch user data" });
-        }
-
-        if (!contributionResponse.ok) {
-            console.error("Contribution data fetch failed");
-            return res.status(contributionResponse.status).json({ error: "Failed to fetch contribution data" });
-        }
-
-        console.log("Parsing responses...");
-        const data = await response.json();
-        const contributionData = await contributionResponse.json();
+        const dataResponse = await axios.get(url, {
+            timeout: 10000
+        });
 
         console.log("Successfully fetched and parsed data.");
 
         res.json({
-            data,
-            contributionData
+            data: dataResponse.data,
+            contributionData: contributionResponse.data
         });
 
     } catch (error) {
-        console.error("Error during fetch:", error);
+        console.error("Error during fetch:", error.message || error);
+
+        if (error.code === 'ECONNABORTED') {
+            return res.status(504).json({ error: "Request timed out" });
+        }
+
+        if (error.response) {
+            return res.status(error.response.status).json({ error: error.response.statusText });
+        }
+
         res.status(500).json({ error: "Internal server error" });
     }
 });
