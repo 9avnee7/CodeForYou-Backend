@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MongoDB_URL).then(result=>logger.info("mongo db connected")).catch(e=>console.log("error occured"));
 
-
+app.set('trust proxy', 1);
 
 app.use(cors());
 app.use(helmet());
